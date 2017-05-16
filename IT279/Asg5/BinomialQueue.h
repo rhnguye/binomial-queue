@@ -1,0 +1,78 @@
+#ifndef BINOMIALQUEUE_H_
+#define BINOMIALQUEUE_H_
+
+#include <vector>
+
+using namespace std;
+
+template <class T>
+class BinomialQueue;
+
+template <class T>
+class BinomialNode
+{
+	public:
+		T element;
+		BinomialNode *leftChild;
+		BinomialNode *nextSibling;
+
+		BinomialNode( const T & theElement,BinomialNode *lt, BinomialNode *rt ) : element( theElement ), leftChild( lt ), nextSibling( rt ) { }
+		friend class BinomialQueue<T>;
+
+	public:
+		void printElement(int level)
+		{ 
+			int i;
+			// print identation
+			if(level > 0)
+				cout << "       " ;
+			for (i = 0; i< level; i++)
+				cout << "     " ;
+			cout << element << endl; 
+		}
+
+			void printChild(int level)
+			{
+				if(leftChild)
+				{
+					leftChild->printElement(level);
+					leftChild->printChild(++level);
+					leftChild->printSibling(level);
+				}
+				//  printSibling(level);
+			}
+			void printSibling(int level) 
+			{
+				if(nextSibling)
+				{
+					nextSibling->printElement(level);
+					nextSibling->printChild(++level);
+					nextSibling->printSibling(level);
+				}	  
+			}
+	        };
+
+template <class T>
+class BinomialQueue
+{
+	public:
+		BinomialQueue( );
+		~BinomialQueue( );
+		bool isEmpty( ) const;
+		bool isFull( ) const;
+		void insert( const T & x );
+      		void makeEmpty( );
+      		void merge( BinomialQueue & rhs );
+      		void print();
+	  	int getCurrSize() {return currentSize;}
+
+	private:
+		int currentSize;// current number of Binomial Trees in the queue			
+		vector<BinomialNode<T> *> myQueue;// An array of Binomial Trees 
+		int capacity( ) const;
+		BinomialNode<T> * merge( BinomialNode<T> *t1, BinomialNode<T> *t2 ) const;
+		BinomialNode<T> * merge1( BinomialNode<T> *t1, BinomialNode<T> *t2 ) const;
+		void swapChildren( BinomialNode<T> *t ) const;
+		void makeEmpty( BinomialNode<T> * & t ) const;
+};
+#endif

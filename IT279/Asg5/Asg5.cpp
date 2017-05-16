@@ -1,0 +1,63 @@
+#include <cstdlib>
+#include <iostream>
+#include <fstream>
+#include <cstring>
+#include "BinomialQueue.h"
+#include "BinomialQueue.cpp"
+using namespace std;
+
+string trim(string line)
+{
+  char *input = const_cast<char *>(line.c_str()); 
+  int l = strlen(input);
+  int i = l;
+  
+  for (i=strlen(input)-1;(i > 0) && isspace(input[i]);i++)
+	  i--;
+
+  if (l - i > 1)
+	  return line.substr(0,i+1);
+  else
+	  return line;
+}
+
+int main(int argc, char *argv[])
+{
+	BinomialQueue<int> BNQ;    
+	string line;
+
+	if (argc != 2)
+	{
+		cout << "Please enter the filename" << endl;
+		return 0;
+	}
+	ifstream myfile;
+	myfile.open(argv[1], ifstream::in);
+
+	if (myfile.is_open())
+	{
+		while (1)
+		{
+			getline(myfile, line);
+			if (myfile.eof())
+				break;
+
+			char seps[] = " ";		
+			char *token;
+			line = trim(line);
+			char *str=const_cast< char *>(line.c_str());  
+				token = strtok(str,seps);
+
+			while (token != NULL)
+			 {
+				BNQ.insert(atoi(token));
+				token = strtok(NULL,seps);
+			 }
+		}
+		BNQ.print();
+	}
+	else
+		cout << "File could not be opened" << endl;
+	
+	return 0;
+}
